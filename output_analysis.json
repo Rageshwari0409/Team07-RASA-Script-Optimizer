@@ -1,0 +1,74 @@
+{
+  "requirements": [
+    {
+      "category": "User Capacity",
+      "requirement": "System for 100 users across 3 offices",
+      "priority": "High",
+      "mentioned_by": "Client"
+    },
+    {
+      "category": "Mobile Access",
+      "requirement": "Mobile access capability",
+      "priority": "High",
+      "mentioned_by": "Client"
+    },
+    {
+      "category": "Integration",
+      "requirement": "Integration with existing tools",
+      "priority": "High",
+      "mentioned_by": "Client"
+    },
+    {
+      "category": "Security",
+      "requirement": "Strong security features",
+      "priority": "High",
+      "mentioned_by": "Client"
+    },
+    {
+      "category": "Budget",
+      "requirement": "Budget around $50,000 per year",
+      "priority": "High",
+      "mentioned_by": "Client"
+    }
+  ],
+  "recommendations": [
+    {
+      "product_service": "Enterprise CRM Plan",
+      "rationale": "Designed for 100 users with mobile apps, API integrations, and SOC 2 compliance",
+      "addresses_requirements": [
+        "User Capacity",
+        "Mobile Access",
+        "Integration",
+        "Security"
+      ],
+      "key_benefits": [
+        "Native mobile apps for iOS and Android",
+        "API integrations with 200+ platforms",
+        "Enterprise-grade security with SOC 2 compliance",
+        "Dedicated onboarding support and training"
+      ],
+      "pricing": "$45 per user/month ($4,500/month or $54,000/year with 15% discount for annual commitment)",
+      "next_steps": "Send detailed proposal with case studies by end of day tomorrow",
+      "priority": "High",
+      "confidence": "High"
+    }
+  ],
+  "summary": {
+    "overview": "Enterprise CRM solution discussion for 100-user deployment across 3 offices",
+    "key_points": [
+      "Client needs CRM for 100 users with mobile access, integrations, and security",
+      "Solution offers native mobile apps, 200+ API integrations, and SOC 2 compliance",
+      "Pricing: $45/user/month ($54,000 annually with 15% discount)",
+      "Budget alignment: Fits client's $50,000/year budget",
+      "Implementation: 4-6 weeks with dedicated support",
+      "Next steps: Proposal with case studies by tomorrow, follow-up next week"
+    ],
+    "outcome": "Positive - Client interested, pricing fits budget, proposal requested",
+    "next_actions": [
+      "Send detailed proposal by end of day tomorrow",
+      "Include case studies from similar-sized companies",
+      "Follow up next week to discuss proposal"
+    ]
+  }
+}
+

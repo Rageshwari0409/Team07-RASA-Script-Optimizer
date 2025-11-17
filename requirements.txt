@@ -1,0 +1,50 @@
+# Core Dependencies
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+python-multipart==0.0.6
+
+# LiteLLM for Azure OpenAI integration
+litellm==1.17.9
+
+# LangChain for LLM orchestration
+langchain==0.3.0
+langchain-community==0.3.0
+langchain-core==0.3.0
+langchain-text-splitters==0.3.0
+
+# Milvus Vector Database (optional - skip if build fails)
+# pymilvus==2.3.4
+
+# Configuration and Environment
+pyyaml==6.0.1
+python-dotenv==1.0.0
+
+# Utilities
+requests==2.31.0
+backoff==2.2.1
+
+# Document Processing
+pypdf2==3.0.1
+python-docx==1.2.0
+pandas==2.3.3
+openpyxl==3.1.5
+
+# Jupyter Notebooks (optional, for examples)
+jupyter==1.0.0
+notebook==7.0.6
+ipykernel==6.27.1
+
+# Logging
+colorlog==6.8.0
+
+# Testing (optional)
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2
+
+# Development (optional)
+black==23.12.0
+flake8==6.1.0
+mypy==1.7.1
+

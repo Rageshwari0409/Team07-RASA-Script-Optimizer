@@ -1,0 +1,65 @@
+# Main Configuration File for Sales Transcript Analysis Agent
+# All sensitive credentials should be set in config/.env file
+
+# Azure OpenAI Configuration
+# Values will be loaded from .env file
+azure_openai:
+  endpoint: ""  # Set via AZURE_OPENAI_ENDPOINT in .env
+  api_key: ""  # Set via AZURE_OPENAI_API_KEY in .env
+  api_version: "2024-05-01-preview"
+  deployment_name: "gpt-4o"  # Set via AZURE_OPENAI_DEPLOYMENT_NAME in .env
+  model_name: "gpt-4o"
+  temperature: 0.7
+  max_tokens: 2000
+
+# Milvus Database Configuration
+# Values will be loaded from .env file
+milvus:
+  host: ""  # Set via MILVUS_HOST in .env
+  port: 443  # Set via MILVUS_PORT in .env
+  user: ""  # Set via MILVUS_USER in .env
+  password: ""  # Set via MILVUS_PASSWORD in .env
+  secure: true  # Set via MILVUS_SECURE in .env
+  collection_name: "test"  # Set via MILVUS_COLLECTION_NAME in .env
+  dimension: 1536  # OpenAI embedding dimension
+  index_type: "IVF_FLAT"
+  metric_type: "L2"
+  nlist: 128
+
+# Embedding Configuration
+embeddings:
+  model: "text-embedding-3-small"
+  deployment_name: "text-embedding-3-small"  # Set via AZURE_OPENAI_EMBEDDING_DEPLOYMENT in .env
+  chunk_size: 500
+  chunk_overlap: 50
+  # Dimension varies by model:
+  # text-embedding-ada-002: 1536
+  # text-embedding-3-small: 1536
+  # text-embedding-3-large: 3072
+
+# FastAPI Configuration
+fastapi:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  title: "Sales Transcript Analysis API"
+  description: "API for analyzing sales representative and client conversations"
+  version: "1.0.0"
+
+
+# Analysis Configuration
+analysis:
+  extract_requirements: true
+  extract_recommendations: true
+  generate_summary: true
+  sentiment_analysis: true
+  key_points_limit: 10
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/app.log"
+  max_bytes: 10485760  # 10MB
+  backup_count: 5
+
