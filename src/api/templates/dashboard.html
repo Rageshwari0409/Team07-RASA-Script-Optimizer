@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Transcript Analysis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: #343541;
+            min-height: 100vh;
+            color: #ececf1;
+        }
+        .top-bar {
+            background: #202123;
+            border-bottom: 1px solid #4d4d4f;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .top-bar h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ececf1;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+        .logout-btn {
+            background: #10a37f;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .logout-btn:hover {
+            background: #0d8c6d;
+        }
+        .main-container {
+            display: flex;
+            height: calc(100vh - 50px);
+        }
+        .sidebar {
+            width: 260px;
+            background: #202123;
+            border-right: 1px solid #4d4d4f;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 12px;
+            border-bottom: 1px solid #4d4d4f;
+        }
+        .new-chat-btn {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: 1px solid #4d4d4f;
+            color: #ececf1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .new-chat-btn:hover {
+            background: #2a2b32;
+        }
+        .chat-history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        .chat-history-item {
+            padding: 12px;
+            margin-bottom: 4px;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #ececf1;
+            transition: background 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .chat-history-item:hover {
+            background: #2a2b32;
+        }
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #343541;
+        }
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #202123;
+            border-bottom: 1px solid #4d4d4f;
+        }
+        .tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid #4d4d4f;
+            color: #ececf1;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .tab:hover {
+            background: #2a2b32;
+        }
+        .tab.active {
+            background: #10a37f;
+            border-color: #10a37f;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+        }
+        .tab-content.active {
+            display: flex;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ececf1;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .chat-messages {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .chat-message {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        .chat-message.user {
+            background: #343541;
+        }
+        .chat-message.assistant {
+            background: #444654;
+        }
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+        .message-avatar.user {
+            background: #5436da;
+            color: white;
+        }
+        .message-avatar.assistant {
+            background: #10a37f;
+            color: white;
+        }
+        .message-content {
+            flex: 1;
+            line-height: 1.6;
+            color: #ececf1;
+        }
+        .input-area {
+            padding: 20px;
+            background: #343541;
+            border-top: 1px solid #4d4d4f;
+        }
+        .input-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .chat-input {
+            width: 100%;
+            padding: 14px 50px 14px 16px;
+            background: #40414f;
+            border: 1px solid #565869;
+            border-radius: 12px;
+            color: #ececf1;
+            font-size: 15px;
+            resize: none;
+            font-family: inherit;
+            max-height: 200px;
+        }
+        .chat-input:focus {
+            border-color: #10a37f;
+        }
+        .send-btn {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            width: 32px;
+            height: 32px;
+            background: #10a37f;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .send-btn:hover {
+            background: #0d8c6d;
+        }
+        .send-btn:disabled {
+            background: #565869;
+            cursor: not-allowed;
+        }
+        select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #40414f;
+            border: 1px solid #565869;
+            border-radius: 8px;
+            color: #ececf1;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: #10a37f;
+        }
+        button.primary-btn {
+            width: 100%;
+            padding: 14px;
+            background: #10a37f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button.primary-btn:hover {
+            background: #0d8c6d;
+        }
+        button.primary-btn:disabled {
+            background: #565869;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background: #444654;
+            border-radius: 8px;
+            border-left: 4px solid #10a37f;
+        }
+        .results h3 {
+            color: #10a37f;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .result-section {
+            margin-bottom: 16px;
+            padding: 12px;
+            background: #343541;
+            border-radius: 6px;
+        }
+        .result-section h4 {
+            color: #10a37f;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        .hidden { display: none; }
+        .loading {
+            color: #10a37f;
+            text-align: center;
+            padding: 20px;
+        }
+        .error {
+            background: #5c2626;
+            border-left-color: #ef4444;
+            color: #fca5a5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>🤖 RASA Sales Assistant</h1>
+        <div class="user-info">
+            <span id="username">User</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <button class="new-chat-btn" onclick="newChat()">
+                    <span>+</span> New Chat
+                </button>
+            </div>
+            <div class="chat-history-list" id="chatHistorySidebar">
+                <p style="color: #999; font-size: 12px; padding: 12px;">Loading...</p>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('transcript')">📝 Sales Transcript</button>
+                <button class="tab" onclick="switchTab('chat')">💬 Chat</button>
+            </div>
+
+            <!-- Transcript Tab -->
+            <div id="transcriptTab" class="tab-content active">
+                <div style="flex: 1; overflow-y: auto; padding: 20px;">
+                    <div class="form-group">
+                        <label class="form-label" for="inputType">Select Input Type:</label>
+                        <select id="inputType" onchange="toggleInputType()">
+                            <option value="text">Text Transcript</option>
+                            <option value="file">Upload File (PDF, Word, CSV, Excel, Audio)</option>
+                        </select>
+                    </div>
+
+                    <div id="textInput" class="form-group">
+                        <label class="form-label" for="transcript">Paste Your Transcript:</label>
+                        <textarea id="transcript" placeholder="Sales Rep: Hi! I'm calling about our CRM solution.&#10;&#10;Client: We need a system for 100 users with mobile access.&#10;&#10;Sales Rep: Perfect! Our Enterprise plan supports that at $45 per user monthly."></textarea>
+                    </div>
+
+                    <div id="fileInput" class="form-group hidden">
+                        <label class="form-label">Upload File:</label>
+                        <input type="file" id="fileUpload" accept=".pdf,.docx,.doc,.csv,.xlsx,.xls,.txt,.mp3,.wav,.m4a,.ogg" onchange="handleFileSelect(event)" style="width: 100%;">
+                        <div id="fileInfo" style="margin-top: 10px; color: #10a37f;"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="primary-btn" onclick="analyzeTranscript()" id="analyzeBtn">🚀 Analyze Transcript</button>
+                    </div>
+
+                    <div id="results" class="hidden"></div>
+                </div>
+            </div>
+
+            <!-- Chat Tab -->
+            <div id="chatTab" class="tab-content">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages">
+                    </div>
+                </div>
+                <div class="input-area">
+                    <div class="input-wrapper">
+                        <textarea class="chat-input" id="chatInput" placeholder="Ask a question..." rows="1" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault();sendChat();}"></textarea>
+                        <button class="send-btn" onclick="sendChat()">▲</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/dashboard.js"></script>
+</body>
+</html>

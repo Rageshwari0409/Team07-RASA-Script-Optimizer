@@ -105,14 +105,37 @@ class TranscriptAnalyzer:
             content = response.choices[0].message.content
             self.logger.info(f"LiteLLM Response: {content[:200]}...")
 
-            # Clean response - remove markdown code blocks if present
+            # Clean response - remove markdown code blocks and extra text
             content = content.strip()
-            if content.startswith("```json"):
-                content = content[7:]  # Remove ```json
-            if content.startswith("```"):
-                content = content[3:]  # Remove ```
-            if content.endswith("```"):
-                content = content[:-3]  # Remove trailing ```
+
+            # Find JSON content between ```json and ``` markers
+            if "```json" in content:
+                start = content.find("```json") + 7
+                end = content.find("```", start)
+                if end != -1:
+                    content = content[start:end].strip()
+            elif content.startswith("```"):
+                content = content[3:]
+                if content.endswith("```"):
+                    content = content[:-3]
+                content = content.strip()
+
+            # Remove any text before the first { or [
+            json_start = min(
+                content.find('{') if '{' in content else len(content),
+                content.find('[') if '[' in content else len(content)
+            )
+            if json_start > 0:
+                content = content[json_start:]
+
+            # Remove any text after the last } or ]
+            json_end = max(
+                content.rfind('}') if '}' in content else -1,
+                content.rfind(']') if ']' in content else -1
+            )
+            if json_end != -1:
+                content = content[:json_end + 1]
+
             content = content.strip()
 
             analysis_result = json.loads(content)
