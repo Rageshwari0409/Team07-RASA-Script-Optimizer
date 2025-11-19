@@ -96,8 +96,9 @@ TEMP_DIR.mkdir(exist_ok=True)
 
 @app.get("/login", response_class=HTMLResponse)
 async def login_page():
-    with open("src/api/templates/login.html", "r", encoding="utf-8") as f:
-        return f.read()
+    from pathlib import Path
+    login_file = Path("src/api/templates/login.html")
+    return HTMLResponse(content=login_file.read_text(encoding="utf-8"))
 
 @app.post("/register")
 async def register(request: RegisterRequest):
@@ -129,8 +130,9 @@ async def root(session: Optional[str] = Cookie(None)):
     """Root endpoint - Web UI for file upload."""
     if not session or session not in SESSIONS:
         return RedirectResponse(url="/login", status_code=302)
-    with open("src/api/templates/dashboard.html", "r", encoding="utf-8") as f:
-        return f.read()
+    from pathlib import Path
+    dashboard_file = Path("src/api/templates/dashboard.html")
+    return HTMLResponse(content=dashboard_file.read_text(encoding="utf-8"))
 
 
 @app.get("/health", response_model=HealthResponse)
